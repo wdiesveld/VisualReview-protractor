@@ -74,10 +74,11 @@ function initRun (projectName, suiteName, branchName) {
 
 /**
  * Instructs Protractor to create a screenshot of the current browser and sends it to the VisualReview server.
- * @param name the screenshot's name.
+ * @param {String} name the screenshot's name.
+ * @param {Array<JSON>} mask Array of Masks that we want to add to this screenshot
  * @returns {Promise}
  */
-function takeScreenshot (name) {
+function takeScreenshot (name, mask) {
   if(_disabled) {
     return q.resolve();
   }
@@ -95,7 +96,7 @@ function takeScreenshot (name) {
         _throwError('VisualReview-protractor: Could not send screenshot to VisualReview server, could not find any run ID. Was initRun called before starting this test? See VisualReview-protractor\'s documentation for more details on how to set this up.');
       }
 
-      return _client.sendScreenshot(name, run.run_id, metaData, properties, compareSettings, png)
+      return _client.sendScreenshot(name, run.run_id, metaData, properties, compareSettings, png, mask)
         .catch(function (err) {
           _throwError('Something went wrong while sending a screenshot to the VisualReview server. ' + err);
         });
